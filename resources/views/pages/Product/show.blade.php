@@ -40,8 +40,13 @@
                     <td>Rp. {{number_format($item->price_product, 0, ',', '.')}}</td>
                     <td>{{$item->desc_product}}</td>
                     <td>
-                        <button type="button" class="btn btn-danger">Delete</button>
-                        <button type="button" class="btn btn-warning">Edit</button>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#hapus{{$item->id_product}}">
+                            Hapus
+                        </button>
+                        <a href="/product/{{$item->id_product}}/edit" class="btn btn-warning">Edit</a>
+                        <a href="/product/{{$item->id_product}}" class="btn btn-info">Detail</a>
                     </td>
                 </tr>
                 @endforeach
@@ -49,8 +54,34 @@
         </table>
         <div>
             {{ $data_produk->links('pagination::bootstrap-5') }}
-            {{-- isi bagian kosong ini untuk menampilkan detail data lainnya --}}
+            Halaman : {{ $data_produk->currentPage() }} <br />
+            Jumlah Data : {{ $data_produk->total() }} <br />
+            Data Per Halaman : {{ $data_produk->perPage() }} <br />
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+@foreach ($data_produk as $item)
+<div class="modal fade" id="hapus{{$item->id_product}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/product/{{$item->id_product}}" method="POST" class="modal-content">
+            @csrf
+            @method('DELETE')
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">KONFIRMASI ULANG !!!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Apakah anda yakin akan menghapus data {{$item->name_product}} ini?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-danger">Hapus Data</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endforeach
 @endsection
